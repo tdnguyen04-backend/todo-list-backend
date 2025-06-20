@@ -31,8 +31,6 @@ tasksDB.prepare(`
   )
 `).run();
 
-
-
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -49,12 +47,12 @@ app.post('/tasks', (req, res) => {
     console.log(`Added task`, lastTask);
     return res.status(200).send({ success: true, msg: lastTask });
   } catch (error) {
-    console.log(error.code);
     if (error.code == `SQLITE_CONSTRAINT_PRIMARYKEY`) {
       console.log(`Task already existed`)
       return res.status(409).send({ success: false, message: 'Task already exists.' });
     }
-    return res.status(404).send({success: false, msg: `Other errors`});
+    console.log(error)
+    return res.status(404).send({success: false, msg: error});
   }
 })
 
