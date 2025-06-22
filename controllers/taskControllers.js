@@ -27,6 +27,10 @@ const insertStmt = tasksDB.prepare(`
   RETURNING *
 `);
 
+const deleteTableStmt = tasksDB.prepare(`
+  DROP TABLE tasks  
+`)
+
 const insertTask = (req, res) => {
   const data = req.body;
 
@@ -44,4 +48,14 @@ const insertTask = (req, res) => {
   }
 }
 
-module.exports = { insertTask }
+const deleteTaskTable = (req, res) => {
+  try {
+    deleteTableStmt.run();
+    res.status(200).send({success: true, message: 'Table `tasks` has been deleted'})
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send({ success: false, message: 'An unexpected error occurred while creating the task.' });
+  }
+}
+
+module.exports = { insertTask, deleteTaskTable }
